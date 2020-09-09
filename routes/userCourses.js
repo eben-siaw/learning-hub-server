@@ -31,6 +31,18 @@ router.get("/:user/courses", (req, res) => {
 	});
 }); 
 
+//join a course  
+router.post("/join", (req, res) => { 
+ 
+Course.find({meetingId: req.body.meetingId}).then(course => { 
+	if(!course) { 
+	  return res.status(404).json({error: "Course does not exist"})	
+	} 
+	return res.status(200).json({success: true, course})
+})
+
+})
+
 //create a course
 router.post("/:user/addcourse", (req, res) => {
 

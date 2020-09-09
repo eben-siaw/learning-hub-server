@@ -53,25 +53,19 @@ router.post("/login", (req, res) => {
 		bcrypt.compare(req.body.password, user.password).then(isMatch => {
 			if (isMatch) {
 				const payload = {
-					 id: user.id,
+					 _id: user._id,
                     first_name: user.first_name,  
                     email: user.email,
                     last_name: user.last_name
 				};
 
-				jwt.sign(
+			  let token = jwt.sign(
 					payload,
 					 process.env.jwtSecret,
 					{
 						expiresIn: 31556926
-					},
-					(err, token) => {
-						res.json({
-							success: true,
-							token: `Bearer ${token}`
-						});
-					}
-				);
+					}); 
+			   	res.send(token)
 			} else {
 				return res.status(400).json({
 					passwordIncorrect: "password incorrect"
