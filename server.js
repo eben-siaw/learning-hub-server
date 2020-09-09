@@ -10,7 +10,9 @@ require("dotenv").config();
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors(function(req, callback) {
+  callback(null, {origin: true})
+}))
 app.use(bodyParser.urlencoded({extended: true}))
 
 //connection 
