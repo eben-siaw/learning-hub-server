@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router(); 
-const cors = require('cors')
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config()
@@ -8,7 +7,6 @@ const User = require("../models/User");
 
 const auth = require("../middleware/auth");
 
-router.use(cors())
 
 router.post("/register", (req, res) => {
 
