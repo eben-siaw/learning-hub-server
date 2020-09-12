@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router(); 
-
+const cors = require("cors");
 const Course = require("../models/Courses"); 
 
 const User = require("../models/User");
+
+router.use(cors());
 
 //sends a params with a userid
 
