@@ -6,17 +6,24 @@ const mongoose = require("mongoose");
 const port = process.env.PORT || 5050
 const cors = require('cors'); 
 const router = require("./router");
-require("dotenv").config();  
+require("dotenv").config();   
 
-app.use(cors())
-app.use(router);
+app.use(router); 
+
+const corsOptions = {
+  origin: "https://nilee.netlify.app",
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors()) 
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 //connection 
-mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(process.env.Mongo_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 .then(() => console.log('MongoDB is Connected..'))
 .catch(err => console.log(err));
 
