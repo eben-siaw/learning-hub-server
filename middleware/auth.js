@@ -4,7 +4,7 @@ const User = require("../models/Courses");
 
 module.exports = function(req, res, next) {
 
-  const verify = jwt.verify(req.headers['authorization'], process.env.jwtSecret)
+  const verify = jwt.verify(req.headers['authorization'], process.env.secret)
   req.user = verify.user;
   User.findOne({
       _id: verify._id
