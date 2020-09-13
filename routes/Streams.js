@@ -17,7 +17,7 @@ streams.post("/:user/createstreams", (req, res) => {
 	.save((err, stream) => { 
         if (err) return res.status(400).json(err) 
 
-        return res.status(200).json(stream)
+        return res.status(200).json({success: true, stream})
     })
 
 });
@@ -28,31 +28,35 @@ streams.get("/getstreams", (req, res) => {
 	.populate('user')
 	.exec((err, stream) => { 
         if(err) return res.status(400).json(err)
-		res.json(stream);
+		res.json({success: true, stream});
 	});
 }); 
 
 // show a stream
 streams.get("/stream/:id", (req, res) => { 
     
-	 Stream.findOne({ '_id': req.params.id})
-	.exex((err, stream) => { 
-    if(err) return res.status(400).json(err)
-    res.json(stream);
-	})
+    Stream.findOne({ "_id" : req.params.id})
+    .populate('user')
+    .exec((err, stream) => {
+        if(err)  
+        {     
+        return res.status(400).send(err); 
+        }
+        res.status(200).json({ success: true, stream})
+    })
 })
 
 //updating 
 streams.post("/edit/:id", (req, res) => { 
  
-	Stream.updateOne(
+	Stream.findOneAndUpdate(
 		 { _id: req.params.id },
 			    {
 					$set: {
 						title: req.body.title
 					}
 				}
-			)
+       )
 				.then(stream => {
 					res.json({success: true, stream});
 				})
@@ -64,10 +68,9 @@ streams.post("/edit/:id", (req, res) => {
 //deleting  
 streams.post("/delete/:id", (req, res) => { 
 
-
-	Stream.deleteOne({ _id: req.params.id })
-		.then(todo => {
-	 	res.json({ success: true });
+	Stream.findOneAndDelete({ _id: req.params.id })
+		.then(stream => {
+	 	res.json({ success: true, stream });
 			 })
 		.catch(err => {
 		res.json({ err });
