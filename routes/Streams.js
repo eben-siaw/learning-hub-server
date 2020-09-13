@@ -9,7 +9,7 @@ const Stream = require("../models/streams/streams")
 const User = require("../models/User");
 
 //creating 
-streams.post("/:user/createstream", (req, res) => {
+streams.post("/:user/createstreams", (req, res) => {
     User.findOne({ _id: req.params.user }).then(user => {
 	if (!user) {
 	 return res.status(400).json({ message: "user does not exist" });
