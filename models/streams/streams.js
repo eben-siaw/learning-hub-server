@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 
 const Streams = mongoose.Schema({ 
   title: { 
-   type: String
+   type: String,
+   required: true
   }, 
   description: { 
-  type: String
+  type: String, 
+  required: true
   },  
   user: { 
     type: Schema.Types.ObjectId, 

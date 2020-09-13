@@ -6,50 +6,36 @@ streams.use(cors());
 
 const Stream = require("../models/streams/streams")
 
-const User = require("../models/User");
-
 //creating 
-streams.post("/:user/createstreams", (req, res) => {
-    User.findOne({ _id: req.params.user }).then(user => {
-	if (!user) {
-	 return res.status(400).json({ message: "user does not exist" });
-    } 
-	 const newStream = new Stream({
-    title: req.body.title, 
-    description: req.body.description,
-	user: user._id
-	 });
+streams.post("/createstreams", (req, res) => {
+	const newStream = new Stream(req.body);
   	newStream
-	.save()
-	.then(stream => res.json({ success: true, stream}))
-	.catch(error => console.log(error));
-    }); 
+	.save((err, stream) => { 
+        if (err) return res.status(400).json(err) 
+
+        return res.status(200).json(stream)
+    })
 
 });
 
 //fetching
-streams.get("/:user/getstreams", (req, res) => {
-	Stream.find({user: req.params.user})  
+streams.get("/getstreams", (req, res) => {
+	Stream.find()  
 	.populate('user')
-	.then(stream => {
+	.exec((err, stream) => { 
+        if(err) return res.status(400).json(err)
 		res.json(stream);
 	});
 }); 
 
-streams.get("/:user/stream/:id", (req, res) => { 
-    User.findOne({ _id: req.params.user }).then(user => {
-		if (!user) {
-			return res.status(400).json({ message: "user does not exist" });
-		} else {
-			Stream.findOne({ _id: req.params.id, user: req.params.user })
-				.then(stream => {
-					res.json(stream);
-				})
-				.catch(err => {
-					return res.status(400).json({ err });
-				});
-		}
-	});
+// show a stream
+streams.get("/stream/:id", (req, res) => { 
+    
+	 Stream.findOne({ '_id': req.params.id})
+	.exex((err, stream) => { 
+    if(err) return res.status(400).json(err)
+    res.json(stream);
+	})
 })
 
 //updating 
