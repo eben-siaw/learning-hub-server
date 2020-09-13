@@ -36,11 +36,20 @@ streams.get("/:user/getstreams", (req, res) => {
 	});
 }); 
 
-streams.get("/stream/:id", (req, res) => { 
-   Stream.findOne({"_id": req.params.id}) 
-   .then(stream => {  
-      res.json(stream) 
-   })  
+streams.get("/:user/stream/:id", (req, res) => { 
+    User.findOne({ _id: req.params.user }).then(user => {
+		if (!user) {
+			return res.status(400).json({ message: "user does not exist" });
+		} else {
+			Stream.findOne({ _id: req.params.id, user: req.params.user })
+				.then(stream => {
+					res.json(stream);
+				})
+				.catch(err => {
+					return res.status(400).json({ err });
+				});
+		}
+	});
 })
 
 //updating 
