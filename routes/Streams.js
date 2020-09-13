@@ -7,8 +7,12 @@ streams.use(cors());
 const Stream = require("../models/streams/streams")
 
 //creating 
-streams.post("/createstreams", (req, res) => {
-	const newStream = new Stream(req.body);
+streams.post("/:user/createstreams", (req, res) => {
+	const newStream = new Stream({ 
+      title: req.body.title, 
+      description: req.body.description, 
+      user: req.params.user  
+    });
   	newStream
 	.save((err, stream) => { 
         if (err) return res.status(400).json(err) 
