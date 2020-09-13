@@ -28,7 +28,7 @@ streams.get("/getstreams", (req, res) => {
 	.populate('user')
 	.exec((err, stream) => { 
         if(err) return res.status(400).json(err)
-		res.json({success: true, stream});
+		res.status(200).json(stream);
 	});
 }); 
 
