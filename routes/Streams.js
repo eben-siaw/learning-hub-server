@@ -36,6 +36,13 @@ streams.get("/:user/getstreams", (req, res) => {
 	});
 }); 
 
+streams.get("/stream/:id", (req, res) => { 
+   Stream.findOne({"_id": req.params.id}) 
+   .then(stream => {  
+      res.json(stream) 
+   })  
+})
+
 //updating 
 streams.post("/edit/:id", (req, res) => { 
  
