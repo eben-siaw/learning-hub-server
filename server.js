@@ -29,11 +29,9 @@ mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopolo
 
 const Users = require('./routes/Users');  
 const Courses = require("./routes/userCourses");
-const Streams = require("./routes/Streams");
 
 app.use('/users', Users)
 app.use('/courses', Courses)
-app.use('/streams', Streams)
 
 app.listen(port, function() {
   console.log('Server is running on port: ' + port)
