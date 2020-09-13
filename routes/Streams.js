@@ -4,9 +4,9 @@ const streams = express.Router()
 
 streams.use(cors()); 
 
-const Stream = require("../../models/streams/streams")
+const Stream = require("../models/streams/streams")
 
-const User = require("../../models/User");
+const User = require("../models/User");
 
 //creating 
 streams.post("/:user/createstream", (req, res) => {
@@ -29,7 +29,9 @@ streams.post("/:user/createstream", (req, res) => {
 
 //fetching
 streams.get("/:user/getstreams", (req, res) => {
-	Stream.find({user: req.params.user}).then(stream => {
+	Stream.find({user: req.params.user})  
+	.populate('user')
+	.then(stream => {
 		res.json(stream);
 	});
 }); 
@@ -65,4 +67,6 @@ streams.post("/delete/:id", (req, res) => {
 		res.json({ err });
     	});
 	
-})
+}) 
+
+module.exports = streams;

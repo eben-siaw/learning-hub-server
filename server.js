@@ -29,7 +29,7 @@ mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopolo
 
 const Users = require('./routes/Users');  
 const Courses = require("./routes/userCourses");
-const Streams = require("./routes/Streams/Streams");
+const Streams = require("./routes/Streams");
 
 app.use('/users', Users)
 app.use('/courses', Courses)
