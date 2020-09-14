@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-
+const cors = require('cors');
 const Video  = require("../models/videos/videos");
+
+router.use(cors())
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
