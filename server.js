@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser') 
 const cookieParser = require('cookie-parser');
 const app = express()  
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
 const port = process.env.PORT || 5050
 const cors = require('cors'); 
 const router = require("./router");
@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 //connection 
-mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+const conn = mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 .then(() => console.log('MongoDB is Connected..'))
 .catch(err => console.log(err));
 

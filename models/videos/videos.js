@@ -12,7 +12,7 @@ const Video = mongoose.Schema({
   required: true
   },   
 
-  filePath: { 
+  filename: { 
   type: String
   }, 
 
