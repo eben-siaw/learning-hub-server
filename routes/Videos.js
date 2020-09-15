@@ -51,14 +51,11 @@ const upload = multer({ storage })
 
 //upload and save video to the storage and database
 router.post("/saveVideo", upload.single('file'), (req, res, next) => { 
-    
-   console.log(req.file); 
-
+     
     const video = new Video({ 
         title: req.body.title, 
         description: req.body.description,  
         fileId: req.file.id,
-        filename: req.file.filename, 
         instructor: req.body.userId
     })
 
