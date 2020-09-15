@@ -55,15 +55,15 @@ router.post("/saveVideo", upload.single('file'), (req, res, next) => {
    console.log(req.file); 
 
     const video = new Video({ 
-        instructor: req.body.instructor, 
         title: req.body.title, 
         description: req.body.description,  
         fileId: req.file.id,
-        filename: req.file.filename
+        filename: req.file.filename, 
+        instructor: req.body.userId
     })
 
     video.save((err, video) => {
-        if(err) return res.status(400).json({ success: false, err })
+        if(err) return res.status(400).json(err)
         return res.status(200).json({
             success: true, video 
         })

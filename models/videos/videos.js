@@ -13,7 +13,8 @@ const Video = mongoose.Schema({
   },   
 
   fileId: {
-   type: String
+   type: String, 
+   required: true
   },
 
   filename: { 
