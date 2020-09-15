@@ -46,27 +46,17 @@ const storage = new GridFsStorage({
     }
   }); 
 
-const upload = multer({ storage: storage }).single("file")
+const upload = multer({ storage })
 
- // upload the video from onDrop
-router.post("/uploadfiles", (req, res) => {
 
-    upload(req, res, err => {
-        if (err) {
-            return res.json({ success: false, err })
-        }
-        return res.json({ success: true,  filename: req.file.filename})
-    })
-
-});
-
-// save video to the database
-router.post("/saveVideo", (req, res) => {
+//upload and save video to the storage and database
+router.post("/saveVideo", upload.single('file'), (req, res, next) => {
 
     const video = new Video({ 
         instructor: req.body.instructor, 
         title: req.body.title, 
-        description: req.body.description, 
+        description: req.body.description,  
+        fileId: req.file.id,
         filename: req.file.filename
     })
 

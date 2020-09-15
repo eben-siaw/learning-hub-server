@@ -12,10 +12,14 @@ const Video = mongoose.Schema({
   required: true
   },   
 
+  fileId: {
+   type: String
+  },
+
   filename: { 
   type: String
   }, 
-
+  
   instructor: { 
     type: Schema.Types.ObjectId, 
     ref: 'User'
