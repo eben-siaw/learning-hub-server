@@ -55,7 +55,7 @@ router.post("/uploadfiles", (req, res) => {
         if (err) {
             return res.json({ success: false, err })
         }
-        return res.json({ success: true,  filename: res.req.file})
+        return res.json({ success: true,  filename: req.file.filename})
     })
 
 });
@@ -63,7 +63,12 @@ router.post("/uploadfiles", (req, res) => {
 // save video to the database
 router.post("/saveVideo", (req, res) => {
 
-    const video = new Video(req.body)
+    const video = new Video({ 
+        instructor: req.body.instructor, 
+        title: req.body.title, 
+        description: req.body.description, 
+        filename: req.file.filename
+    })
 
     video.save((err, video) => {
         if(err) return res.status(400).json({ success: false, err })
