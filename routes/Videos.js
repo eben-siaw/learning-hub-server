@@ -14,13 +14,7 @@ router.use(cors())
 //upload and save video to the storage and database
 router.post("/saveVideo",  (req, res, next) => { 
      
-    const video = new Video({ 
-        title: req.body.title, 
-        description: req.body.description,  
-        videoName: req.body.videoName, 
-        video: req.body.video,
-        instructor: req.body.userId
-    })
+    const video = new Video(req.body)
 
     video.save((err, video) => {
         if(err) return res.status(400).json(err)
