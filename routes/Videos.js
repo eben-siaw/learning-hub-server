@@ -31,7 +31,7 @@ router.get("/getVideos", (req, res) => {
         .populate('instructor')
         .exec((err, videos) => {
             if(err) return res.status(400).send(err);
-            res.status(200).json({ success: true, videos })
+            res.status(200).json(videos)
         })
 
 });
