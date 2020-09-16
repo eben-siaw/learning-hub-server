@@ -4,58 +4,21 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');  
 require('dotenv').config()
-const GridFsStorage = require('multer-gridfs-storage'); 
-const crypto = require('crypto')
 const mongoose = require("mongoose"); 
 const Video  = require("../models/videos/videos");
 
 
 router.use(cors()) 
 
-const connect = mongoose.createConnection( 
-    process.env.mongoURI, 
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true } 
- );
-
-    let gfs;
-
-    connect.once('open', () => {
-        // initialize stream
-        gfs = new mongoose.mongo.GridFSBucket(connect.db, {
-            bucketName: "uploads"
-        });
-    });
-
-
-const storage = new GridFsStorage({
-    url: process.env.mongoURI,
-    file: (req, file) => {
-      return new Promise((resolve, reject) => {
-        crypto.randomBytes(16, (err, buf) => {
-          if (err) {
-            return reject(err);
-          }
-          const filename = buf.toString('hex') + path.extname(file.originalname);
-          const fileInfo = {
-            filename: filename,
-            bucketName: 'uploads'
-          };
-          resolve(fileInfo);
-        });
-      });
-    }
-  }); 
-
-const upload = multer({ storage })
-
 
 //upload and save video to the storage and database
-router.post("/saveVideo", upload.single('file'), (req, res, next) => { 
+router.post("/saveVideo",  (req, res, next) => { 
      
     const video = new Video({ 
         title: req.body.title, 
         description: req.body.description,  
-        fileId: req.file.id,
+        videoName: req.body.videoName, 
+        video: req.body.video,
         instructor: req.body.userId
     })
 
