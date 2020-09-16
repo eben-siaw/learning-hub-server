@@ -29,11 +29,10 @@ router.get("/getVideos", (req, res) => {
 
     Video.find()
         .populate('instructor')
-        .exec((err, videos) => {
-            if(err) return res.status(400).send(err);
-            res.status(200).json(videos)
+        .then(videos => { 
+        if(!videos) return res.status(404).json({error: "No videos found"})	   
+        return res.status(200).json(videos)
         })
-
 });
 
 
