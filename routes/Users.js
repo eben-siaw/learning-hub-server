@@ -58,7 +58,9 @@ router.post("/login", (req, res) => {
 					 _id: user._id,
                     first_name: user.first_name,  
                     email: user.email,
-                    last_name: user.last_name
+					last_name: user.last_name, 
+					country: user.country, 
+					region: user.region
 				};
 
 			  let token = jwt.sign(

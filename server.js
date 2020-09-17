@@ -35,8 +35,6 @@ app.use('/users', Users)
 app.use('/courses', Courses)
 app.use('/video', Videos)
 
-app.use('/uploads', express.static('uploads'), require("./routes/Videos"));
-
 app.listen(port, function() {
   console.log('Server is running on port: ' + port)
 })
