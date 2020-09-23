@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router(); 
+const cors = require('cors');
+
+router.use(cors())
 
 const Comment = require("../models/comments/comments");
 
@@ -15,7 +18,7 @@ router.post("/saveComment", (req, res) => {
          console.log(err)
          return res.json({ success: false, err }) 
         }    
-        
+
         //find the id of this document and get a comment
         Comment.find({ '_id': comment._id })
         .populate('user')
