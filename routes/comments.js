@@ -38,7 +38,7 @@ router.post("/saveComment", (req, res) => {
  router.post("/getComments", (req, res) => {
 
     Comment.find({ "postId": req.body.videoId })
-        .populate('artist')
+        .populate('user')
         .exec((err, comments) => {
             if (err) {  
                 console.log(err)
