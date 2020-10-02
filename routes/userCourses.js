@@ -50,18 +50,7 @@ Course.find({meetingId: req.body.meetingId}).then(course => {
 	if(!course) { 
 	  return res.status(404).json({error: "Course does not exist"})	
 	}  
-	const payload = { 
-		course_name: course.course_name, 
-		meetingId: course.meetingId
-	}	 
-	let token = jwt.sign(
-		payload,
-		 process.env.secret,
-		{
-			expiresIn: 31556926
-		}); 
- 
-	return res.status(200).json({success: true, course, token})
+	return res.status(200).json({success: true, course})
 })
 
 })

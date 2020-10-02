@@ -8,18 +8,15 @@ const cors = require('cors');
 const router = require("./router");
 require("dotenv").config();    
 
-const ori = "https://nilee.netlify.app" 
-
 app.use(router); 
 
-/* const corsOptions = {
-  origin:  "http://localhost:5050",
+const corsOptions = {
+  origin:  "https://nilee.netlify.app",
   optionsSuccessStatus: 200,
 };
-*/ 
 
 app.use(cors()) 
-//app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json())
