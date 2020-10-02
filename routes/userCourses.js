@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router(); 
-const cors = require("cors");
+const cors = require("cors"); 
+const jwt = require("jsonwebtoken"); 
+require("dotenv").config();
+
 const Course = require("../models/Courses"); 
 
 const User = require("../models/User");
@@ -26,7 +29,14 @@ router.get("/:user/course/:id", (req, res) => {
 	});
 });
 
-//get all courses
+//get all courses by instructor with meeting id
+router.get("/coursehub", (req, res) => {
+	Course.find().then(course => {
+		res.json(course);
+	});
+});  
+
+//get all instructor courses
 router.get("/:user/courses", (req, res) => {
 	Course.find({user: req.params.user }).then(course => {
 		res.json(course);
@@ -39,8 +49,19 @@ router.post("/join", (req, res) => {
 Course.find({meetingId: req.body.meetingId}).then(course => { 
 	if(!course) { 
 	  return res.status(404).json({error: "Course does not exist"})	
-	} 
-	return res.status(200).json({success: true, course})
+	}  
+	const payload = { 
+		course_name: course.course_name, 
+		meetingId: course.meetingId
+	}	 
+	let token = jwt.sign(
+		payload,
+		 process.env.secret,
+		{
+			expiresIn: 31556926
+		}); 
+ 
+	return res.status(200).json({success: true, course, token})
 })
 
 })
@@ -60,8 +81,11 @@ router.post("/:user/addcourse", (req, res) => {
 
 			newcourse
 				.save()
-				.then(course => res.json({ success: true, course}))
-				.catch(error => console.log(error));
+				.then(course => {   
+					res.json({ success: true, course})  
+				})
+				.catch(error => console.log(error)); 
+
 		}
 	});
 });

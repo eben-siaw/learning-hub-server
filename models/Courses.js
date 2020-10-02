@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema; 
 
-const courseSchema = mongoose.Schema({ 
+const courseSchema = mongoose.Schema({  
+  
  user: { 
    type: Schema.Types.ObjectId,  
    ref:'User',
@@ -14,7 +15,8 @@ const courseSchema = mongoose.Schema({
  },
  meetingId: {
  type: String
- },
+ },  
+
  created: {
  type: Date,
  }
