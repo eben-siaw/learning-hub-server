@@ -43,6 +43,14 @@ router.get("/:user/courses", (req, res) => {
 	});
 }); 
 
+router.get("/:user/currentcourse", (req, res) => { 
+
+	Course.findOne({user: req.params.user}) 
+	.then(course => { 
+		res.json(course);
+	})
+})
+
 //join a course  
 router.post("/join", (req, res) => { 
  
