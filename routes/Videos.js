@@ -48,42 +48,28 @@ router.post("/getVideo", (req, res) => {
     })
 });  
 
-router.delete("/:user/removeVideo/:id", (req, res) => { 
+router.delete("/removeVideo/:id", (req, res) => { 
 
-    User.findOne({ _id: req.params.user }).then(user => {
-		if (!user) {
-			return res.status(400).json({ message: "user does not exist" });
-		} else { 
-          Video.findOneAndRemove({ _id: req.params.id })  
+     Video.findOneAndDelete({ _id: req.params.id })  
           .then(video => {
             res.json({ success: true,  video });
         })
         .catch(err => {
             res.json({ err });
         });  
-        }
-    })
+        
 }) 
 
-router.put("/:user/updateVideo/:id", (req, res) => {  
+router.patch("/updateVideo/:id", (req, res) => {  
     
-    User.findOne({ _id: req.params.user }).then(user => { 
-
-		if (!user) {
-			return res.status(400).json({ message: "user does not exist" });
-		} else { 
-          Video.findOneAndUpdate({ _id: req.params.id })   
-          .then(video => {
-            res.json({ success: true,  video });
-        })
-        .catch(err => {
-            res.json({ err });
-        });  
-  
-    } 
-
-   }) 
-
+     Video.findOneAndUpdate({ _id: req.params.id })   
+     .then(video => {
+      res.json({ success: true,  video });
+      })
+      .catch(err => {
+      res.json({ err });
+    });  
+   
 })
 
 module.exports = router;
