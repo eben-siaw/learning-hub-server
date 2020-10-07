@@ -4,7 +4,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken"); 
 require("dotenv").config();
 
-const Course = require("../models/Courses"); 
+const Course = require("../models/Courses")
 
 const User = require("../models/User");
 
@@ -55,14 +55,18 @@ router.get("/:user/currentcourse", (req, res) => {
 router.post("/join", (req, res) => { 
  
 Course.find({meetingId: req.body.meetingId}).then(course => { 
-	if(course) {   
-		let token = jwt.sign(course.dataValues, process.env.secret, {
+	if(course) {    
+		const payload = {  
+			_id: course._id,
+			course_name : course.course_name
+		}
+		let token = jwt.sign(payload, process.env.secret, {
 			expiresIn: 1440,
 		  });
-	  return res.status(200).json({status: "You have joined", token});
+	   res.status(200).json({status: "You have joined", token});
 	}   
 	else { 
-	  return res.status(404).json({error: "Course not found "})	
+	  res.status(404).json({error: "Course not found "})	
 	}
  }) 
    .catch(err => { 
