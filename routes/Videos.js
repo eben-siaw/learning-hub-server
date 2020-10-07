@@ -50,19 +50,24 @@ router.post("/getVideo", (req, res) => {
 
 router.delete("/removeVideo/:id", (req, res) => { 
 
-     Video.findOneAndDelete({ _id: req.params.id })  
+     Video.findOneAndDelete({ "_id": req.params.id })  
           .then(video => {
-            res.json({ success: true,  video });
+            res.json(video);
         })
-        .catch(err => {
-            res.json({ err });
+        .catch(error => {
+            res.json({ error });
         });  
         
 }) 
 
 router.patch("/updateVideo/:id", (req, res) => {  
     
-     Video.findOneAndUpdate({ _id: req.params.id })   
+     Video.findOneAndUpdate({ "_id": req.params.id }, {
+        $set: {
+            title: req.body.title,
+            description: req.body.description
+        }
+    })   
      .then(video => {
       res.json({ success: true,  video });
       })
