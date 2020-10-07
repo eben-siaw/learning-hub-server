@@ -4,9 +4,11 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');  
 require('dotenv').config()
-const mongoose = require("mongoose"); 
+const mongoose = require("mongoose");  
+
 const Video  = require("../models/videos/videos");
 
+const User = require("../models/User");
 
 router.use(cors()) 
 
@@ -44,6 +46,44 @@ router.post("/getVideo", (req, res) => {
         if(err) return res.status(400).send(err);
         res.status(200).json({ success: true, video })
     })
-}); 
+});  
+
+router.post("/:user/removeVideo/:id", (req, res) => { 
+
+    User.findOne({ _id: req.params.user }).then(user => {
+		if (!user) {
+			return res.status(400).json({ message: "user does not exist" });
+		} else { 
+          Video.findOneAndRemove({ _id: req.params.id })  
+          .then(video => {
+            res.json({ success: true,  video });
+        })
+        .catch(err => {
+            res.json({ err });
+        });  
+        }
+    })
+}) 
+
+router.post("/:user/updateVideo/:id", (req, res) => {  
+    
+    User.findOne({ _id: req.params.user }).then(user => { 
+
+		if (!user) {
+			return res.status(400).json({ message: "user does not exist" });
+		} else { 
+          Video.findOneAndUpdate({ _id: req.params.id })   
+          .then(video => {
+            res.json({ success: true,  video });
+        })
+        .catch(err => {
+            res.json({ err });
+        });  
+  
+    } 
+
+   }) 
+
+})
 
 module.exports = router;

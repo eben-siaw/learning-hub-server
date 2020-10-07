@@ -93,7 +93,7 @@ router.delete("/:user/course/delete/:id", (req, res) => {
 		if (!user) {
 			return res.status(400).json({ message: "user does not exist" });
 		} else {
-			Course.deleteOne({ _id: req.params.id })
+			Course.findOneAndDelete({ _id: req.params.id })
 				.then(course => {
 					res.json({ success: true, course });
 				})
@@ -102,6 +102,8 @@ router.delete("/:user/course/delete/:id", (req, res) => {
 				});
 		}
 	});
-});
+}); 
+
+
 
 module.exports = router;
