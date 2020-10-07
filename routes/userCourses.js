@@ -54,7 +54,7 @@ router.get("/:user/currentcourse", (req, res) => {
 //join a course  
 router.post("/join", (req, res) => { 
  
-Course.find({meetingId: req.body.meetingId}).then(course => { 
+Course.findOne({meetingId: req.body.meetingId}).then(course => { 
 	if(course) {    
 		const payload = {  
 			_id: course._id,
