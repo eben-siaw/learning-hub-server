@@ -55,15 +55,18 @@ router.get("/:user/currentcourse", (req, res) => {
 router.post("/join", (req, res) => { 
  
 Course.find({meetingId: req.body.meetingId}).then(course => { 
-	if(course) {  
-	  return res.status(200).json(course);
+	if(course) {   
+		let token = jwt.sign(course.dataValues, process.env.secret, {
+			expiresIn: 1440,
+		  });
+	  return res.status(200).json({status: "You have joined", token});
 	}   
 	else { 
 	  return res.status(404).json({error: "Course not found "})	
 	}
  }) 
-   .catch(error => { 
-	   res.json(error);
+   .catch(err => { 
+	   res.json({error: err});
    })
 
 })
