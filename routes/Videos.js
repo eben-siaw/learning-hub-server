@@ -48,7 +48,7 @@ router.post("/getVideo", (req, res) => {
     })
 });  
 
-router.post("/:user/removeVideo/:id", (req, res) => { 
+router.delete("/:user/removeVideo/:id", (req, res) => { 
 
     User.findOne({ _id: req.params.user }).then(user => {
 		if (!user) {
@@ -65,7 +65,7 @@ router.post("/:user/removeVideo/:id", (req, res) => {
     })
 }) 
 
-router.post("/:user/updateVideo/:id", (req, res) => {  
+router.put("/:user/updateVideo/:id", (req, res) => {  
     
     User.findOne({ _id: req.params.user }).then(user => { 
 
