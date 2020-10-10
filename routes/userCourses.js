@@ -66,7 +66,7 @@ Course.findOne({meetingId: req.body.meetingId}).then(course => {
 	   res.status(200).json({status: "You have joined", token});
 	}   
 	else { 
-	  res.status(404).json({error: "Course not found "})	
+	  res.status(404).json({error: "Course not found"})	
 	}
  }) 
    .catch(err => { 

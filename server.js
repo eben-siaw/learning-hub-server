@@ -31,13 +31,17 @@ const Users = require('./routes/Users');
 const Courses = require("./routes/userCourses"); 
 const Lessons = require("./routes/Lessons")
 const Videos = require("./routes/Videos")
-const Comment = require("./routes/comments");
+const Comment = require("./routes/comments"); 
+const Likes = require("./routes/Likes"); 
+const DisLikes = require("./routes/Dislikes");
 
 app.use('/users', Users)
 app.use('/courses', Courses) 
 app.use('/lesson', Lessons)
 app.use('/video', Videos)
 app.use('/comment', Comment)
+app.use('/like', Likes); 
+app.use('/dislike', DisLikes);
 
 app.listen(port, function() {
   console.log('Server is running on port: ' + port)
