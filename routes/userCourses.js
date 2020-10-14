@@ -4,9 +4,11 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken"); 
 require("dotenv").config();
 
-const Course = require("../models/Courses")
+const Course = require("../models/Courses/Courses")
 
-const User = require("../models/User");
+const User = require("../models/User"); 
+
+const JoinedCourses = require("../models/Courses/JoinedCourses");
 
 router.use(cors());
 
@@ -29,14 +31,18 @@ router.get("/:user/course/:id", (req, res) => {
 	});
 });
 
-//get all courses by instructor with meeting id
-router.get("/coursehub", (req, res) => {
-	Course.find().then(course => {
-		res.json(course);
+//get all courses joined by user
+router.get("/coursehub/:user", (req, res) => {
+	JoinedCourses.find({user: req.params.user})
+	.populate('course')
+	.then(course => { 
+		if(!course) return res.status(404).json({message: "No Course found"});
+		return res.status(200).json({success: true, course});
 	});
 });  
 
-//get all instructor courses
+
+//get all instructor courses 
 router.get("/:user/courses", (req, res) => {
 	Course.find({user: req.params.user }).then(course => {
 		res.json(course);
@@ -52,27 +58,36 @@ router.get("/:user/currentcourse", (req, res) => {
 })
 
 //join a course  
-router.post("/join", (req, res) => { 
- 
-Course.findOne({meetingId: req.body.meetingId}).then(course => { 
-	if(course) {    
-		const payload = {  
-			_id: course._id,
-			course_name : course.course_name
-		}
-		let token = jwt.sign(payload, process.env.secret, {
-			expiresIn: 1440,
-		  });
-	   res.status(200).json({status: "You have joined", token});
-	}   
-	else { 
-	  res.status(404).json({error: "Course not found"})	
-	}
- }) 
-   .catch(err => { 
-	   res.json({error: err});
-   })
+router.post("/join/:user", (req, res) => { 
+  
+	 Course.findOne({meetingId: req.body.meetingId}).then(result => {  
+		if(result) {      
+			JoinedCourses.findOne({meetingId: req.body.meetingId}) 
+			.then(joined => {  
+				if (joined) {   
+				return res.status(400).json({message: "You have already join this course!"});  
+			    }else { 
+			      const userjoin = new JoinedCourses({
+				  user: req.params.user,
+				  meetingId: req.body.meetingId, 
+				  course: result._id });
 
+				  userjoin.save(); 
+
+				 return res.status(200).json({status: "You have successfully joined ", result});
+				 
+			    } 
+
+			});  
+		 
+		} else { 
+		  res.status(404).json({error: "Course not found"})	
+		} 
+
+	 }).catch((error) => { 
+		 console.log(error);
+	   })
+	
 })
 
 //create a course

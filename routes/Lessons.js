@@ -22,7 +22,7 @@ router.get("/getlessons", (req, res, next) => {
     .populate('instructor')
     .then(lesson => { 
      if(!lesson) return res.status(404).json({error: "No lesson found"})	   
-    return res.status(200).json(lesson)
+    return res.status(200).json({success: true, lesson})
     })
     
 }); 
