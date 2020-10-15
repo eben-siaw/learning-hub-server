@@ -32,8 +32,8 @@ router.get("/viewlesson/:id", (req, res, next) => {
     Lesson.findOne({"_id": req.params.id})
     .populate('instructor')
     .then(lesson => { 
-     if(!lesson) return res.status(404).json({error: "No lesson found"})	   
-    return res.status(200).json(lesson)
+     if(!lesson) return res.status(404).json({error: "No document found"});	   
+     return res.status(200).json({success: true, lesson})
     })
     
 });
