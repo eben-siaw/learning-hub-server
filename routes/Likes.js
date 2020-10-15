@@ -98,9 +98,9 @@ router.get("/getNotifications/:user", (req, res, next) => {
     .populate('sender')
     .then(notification => { 
        if(!notification) { 
-           return res.json(404).json({message: "No notifications found at this moment"})
+           return res.status(404).json({message: "No notifications found at this moment"})
        } 
-       res.json(notification);
+      return res.status(200).json({success: true, notification});
     })
      .catch(error => { 
       console.log(error);
