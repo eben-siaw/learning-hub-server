@@ -35,14 +35,14 @@ router.get("/:user/course/:id", (req, res) => {
 router.get("/coursehub/:user", (req, res) => {
 	JoinedCourses.find({user: req.params.user})
 	.populate('course')
-	.then(course => { 
-		if(!course) return res.status(404).json({message: "No Course found"});
+	.exec((err, course) => { 
+		if(err) return res.status(400).send(err); 
 		return res.status(200).json({success: true, course});
-	});
+	})
 });  
 
 
-//get all instructor courses 
+//get all Instructor courses 
 router.get("/:user/courses", (req, res) => {
 	Course.find({user: req.params.user }).then(course => {
 		res.json(course);
