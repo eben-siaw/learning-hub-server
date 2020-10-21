@@ -45,15 +45,16 @@ router.get("/coursehub/:user", (req, res) => {
 //get all Instructor courses 
 router.get("/:user/courses", (req, res) => {
 	Course.find({user: req.params.user }).then(course => {
-		res.json(course);
+	  return res.status(200).json({success: true, course});
 	});
 }); 
 
+// get current course
 router.get("/:user/currentcourse", (req, res) => { 
 
 	Course.findOne({user: req.params.user}) 
 	.then(course => { 
-		res.json(course);
+	   return res.status(200).json({success: true, course});
 	})
 })
 
