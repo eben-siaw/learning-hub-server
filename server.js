@@ -22,8 +22,10 @@ app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+const config = "mongodb://localhost:27017/nileedatabase";
+
 //connection 
-const conn = mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+const conn = mongoose.connect(config, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 .then(() => console.log('MongoDB is Connected..'))
 .catch(err => console.log(err));
 

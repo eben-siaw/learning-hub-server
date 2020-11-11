@@ -27,16 +27,25 @@ router.post("/saveVideo",  (req, res, next) => {
 
 });
 
-router.get("/getVideos", (req, res) => {
-
-    Video.find()
+// public videos - general
+router.get("/getVideos/:public", (req, res) => {
+    Video.find({VideoPrivacy: req.params.public})
         .populate('instructor')
         .then(videos => { 
         if(!videos) return res.status(404).json({error: "No videos found"})	   
         return res.status(200).json(videos)
         })
-});
+}); 
 
+// private videos - when the selected video privacy was private
+router.get("/getVideos/:meetingId", (req, res) => {
+    Video.find({meetingId: req.params.meetingId})
+        .populate('instructor')
+        .then(videos => { 
+        if(!videos) return res.status(404).json({error: "No Private videos found"})	   
+        return res.status(200).json(videos)
+    })
+});
 
 router.post("/getVideo", (req, res) => {
 

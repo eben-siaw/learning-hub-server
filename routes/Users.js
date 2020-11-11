@@ -6,13 +6,17 @@ require("dotenv").config()
 const User = require("../models/User");
 const cors = require('cors');
 const auth = require("../middleware/auth");
+const nodemailer = require("nodemailer");  
+const crypto = require("crypto"); 
+
+const sendergridTransport = require("nodemailer-sendgrid-transport"); 
 
 router.use(cors())
 
 router.post("/register", (req, res) => {
 
-
-	User.findOne({ email: req.body.email }).then(user => {
+	User.findOne({ email: req.body.email }) 
+	.then(user => {
 		if (user) {
 			return res.status(400).json({ message: "email already exists" });
 		} else {
@@ -78,6 +82,37 @@ router.post("/login", (req, res) => {
 		});
 	});
 });
+
+router.post('/resetPassword',(req, res)=>{ 
+
+	crypto.randomBytes(32,(err,buffer)=>{
+		if(err){
+			console.log(err)
+		}
+		const token = buffer.toString("hex")
+		User.findOne({email:req.body.email})
+		.then(user=>{
+			if(!user){
+				return res.status(422).json({error:"User dont exists with that email"})
+			}
+			user.resetToken = token
+			user.expireToken = Date.now() + 3600000
+			user.save().then((result)=>{
+				transporter.sendMail({
+					to:user.email,
+					from:"edunal.info@gmail.com",
+					subject:"password reset",
+					html:`
+					<p>You requested for password reset</p>
+					<h5>click in this <a href="${EMAIL}/reset/${token}">link</a> to reset password</h5>
+					`
+				})
+				res.json({message:"A link has been sent to your email"})
+			})
+
+		})
+	})
+})
 
 
 router.get("/getAuth", auth, (req, res) => {
