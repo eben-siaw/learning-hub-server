@@ -7,18 +7,26 @@ const User = require("../models/User");
 const cors = require('cors');
 const auth = require("../middleware/auth");
 const nodemailer = require("nodemailer");  
-const crypto = require("crypto"); 
+const crypto = require("crypto");  
 
-const sendergridTransport = require("nodemailer-sendgrid-transport"); 
+const sendgridTransport = require("nodemailer-sendgrid-transport"); 
 
-router.use(cors())
+const {SENDGRID_API, url} = require("../config/keys");
+
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth:{
+        api_key: SENDGRID_API
+    }
+}));
+
+router.use(cors());
 
 router.post("/register", (req, res) => {
 
 	User.findOne({ email: req.body.email }) 
 	.then(user => {
 		if (user) {
-			return res.status(400).json({ message: "email already exists" });
+			return res.status(400).json({error: "email already exists" });
 		} else {
 			const newUser = new User({
                 first_name: req.body.first_name, 
@@ -37,7 +45,15 @@ router.post("/register", (req, res) => {
 					newUser.password = hash;
 					newUser
 						.save()
-						.then(user => res.json(user))
+						.then(user =>  { 
+							transporter.sendMail({ 
+								to:user.email,
+								from:"edei-siaw@st.ug.edu.gh",
+								subject:"Edunal - Welcome",
+								html:"<p>Account successfully created!.</p>"
+							})
+							res.json(user)
+						})
 						.catch(err => console.log(err));
 				});
 			});
@@ -51,7 +67,8 @@ router.post("/login", (req, res) => {
 	const email = req.body.email;
 	const password = req.body.password;
 
-	User.findOne({ email: email }).then(user => {
+	User.findOne({ email: email }) 
+	.then(user => {
 		if (!user) {
 			return res.json({error: "email not found"});
 		}
@@ -80,7 +97,10 @@ router.post("/login", (req, res) => {
 				});
 			}
 		});
-	});
+	}) 
+	.catch(error => { 
+	 res.json({error: "User does not exist!"})	
+	})
 });
 
 router.post('/resetPassword',(req, res)=>{ 
@@ -100,11 +120,11 @@ router.post('/resetPassword',(req, res)=>{
 			user.save().then((result)=>{
 				transporter.sendMail({
 					to:user.email,
-					from:"edunal.info@gmail.com",
-					subject:"password reset",
+					from:"edei-siaw@st.ug.edu.gh",
+					subject:"Edunal - Password reset",
 					html:`
 					<p>You requested for password reset</p>
-					<h5>click in this <a href="${EMAIL}/reset/${token}">link</a> to reset password</h5>
+					<h5>click on this <a href="${url}/reset-pass/${token}">link</a> to reset your password</h5>
 					`
 				})
 				res.json({message:"A link has been sent to your email"})
@@ -113,6 +133,42 @@ router.post('/resetPassword',(req, res)=>{
 		})
 	})
 })
+
+router.post('/new-password', (req, res)=> { 
+
+    const newPassword = req.body.password; 
+
+    const password2 = req.body.password2;
+
+    if(newPassword !== password2) { 
+       res.json({error: "Passwords do not match. Check again!"});  
+    }
+    const sentToken = req.body.token; 
+
+    Admin.findOne({resetToken: sentToken, expireToken:{$gt:Date.now()}})
+    .then(user=>{
+        if(!user){
+            return res.json({error: "Try again session expired"})
+        } 
+
+        bcrypt.hash(newPassword, 12).then(hashedpassword => { 
+
+           user.password = hashedpassword; 
+
+           user.resetToken = undefined 
+
+           user.expireToken = undefined 
+
+           user.save() 
+           .then((saveduser)=>{
+               res.json({message:"Your Password has been updated successfully"})
+           })
+        })
+    }).catch(err=>{
+       res.json({err: "Failed to reset password!"})
+    })
+})
+
 
 
 router.get("/getAuth", auth, (req, res) => {

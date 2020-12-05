@@ -46,5 +46,5 @@ app.use('/like', Likes);
 app.use('/dislike', DisLikes);
 
 app.listen(port, function() {
-  console.log('Server is running on port: ' + port)
+console.log('Server is running on port: ' + port)
 })

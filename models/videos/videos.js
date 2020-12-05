@@ -16,11 +16,6 @@ const Video = mongoose.Schema({
    type: String, 
   }, 
 
-  VideoPrivacy: { 
-   type: Number, 
-   required: true
-  }, 
-
   meetingId : { 
    type: String
   }, 
