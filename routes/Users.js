@@ -26,7 +26,7 @@ router.post("/register", (req, res) => {
 	User.findOne({ email: req.body.email }) 
 	.then(user => {
 		if (user) {
-			return res.status(400).json({error: "email already exists" });
+			return res.json({error: "Email already exists" });
 		} else {
 			const newUser = new User({
                 first_name: req.body.first_name, 
@@ -40,9 +40,12 @@ router.post("/register", (req, res) => {
 			});
 
 			bcrypt.genSalt(10, (err, salt) => {
-				bcrypt.hash(newUser.password, salt, (err, hash) => {
-					if (err) throw err;
-					newUser.password = hash;
+				bcrypt.hash(newUser.password, salt, (err, hash) => { 
+
+					if (err) throw err; 
+
+					newUser.password = hash; 
+
 					newUser
 						.save()
 						.then(user =>  { 
@@ -50,8 +53,9 @@ router.post("/register", (req, res) => {
 								to:user.email,
 								from:"edei-siaw@st.ug.edu.gh",
 								subject:"Edunal - Welcome",
-								html:"<p>Account successfully created!.</p>"
-							})
+								html:`<p>Account successfully created!.</p> 
+								 <h1> Create courses and share lessons and videos with Edunal </h1>
+					     		`})
 							res.json(user)
 						})
 						.catch(err => console.log(err));
@@ -70,7 +74,7 @@ router.post("/login", (req, res) => {
 	User.findOne({ email: email }) 
 	.then(user => {
 		if (!user) {
-			return res.json({error: "email not found"});
+			return res.json({error: "Email not found"});
 		}
 
 		bcrypt.compare(req.body.password, user.password).then(isMatch => {
@@ -92,8 +96,8 @@ router.post("/login", (req, res) => {
 					}); 
 			   	res.send(token)
 			} else {
-				return res.status(400).json({
-					error: "password incorrect"
+				return res.json({
+					error: "Password is incorrect"
 				});
 			}
 		});
@@ -105,7 +109,7 @@ router.post("/login", (req, res) => {
 
 router.post('/resetPassword',(req, res)=>{ 
 
-	crypto.randomBytes(32,(err,buffer)=>{
+	crypto.randomBytes(32,(err, buffer)=>{
 		if(err){
 			console.log(err)
 		}
@@ -113,7 +117,7 @@ router.post('/resetPassword',(req, res)=>{
 		User.findOne({email:req.body.email})
 		.then(user=>{
 			if(!user){
-				return res.status(422).json({error:"User dont exists with that email"})
+				return res.json({error:"User dont exists with that email"})
 			}
 			user.resetToken = token
 			user.expireToken = Date.now() + 3600000
@@ -136,7 +140,7 @@ router.post('/resetPassword',(req, res)=>{
 
 router.post('/new-password', (req, res)=> { 
 
-    const newPassword = req.body.password; 
+    const newPassword = req.body.password1; 
 
     const password2 = req.body.password2;
 
