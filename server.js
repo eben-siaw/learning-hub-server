@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser') 
 const cookieParser = require('cookie-parser');
-const app = express()  
+const app = express();  
 const mongoose = require("mongoose"); 
 const port = process.env.PORT || 5050
 const cors = require('cors'); 
@@ -11,7 +11,7 @@ require("dotenv").config();
 app.use(router); 
 
 const corsOptions = {
-  origin:  "https://nilee.netlify.app",
+  origin:  "https://edunal.com",
   optionsSuccessStatus: 200,
 };
 
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 const config = "mongodb://localhost:27017/nileedatabase";
 
 //connection 
-const conn = mongoose.connect(config, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+const conn = mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 .then(() => console.log('MongoDB is Connected..'))
 .catch(err => console.log(err));
 

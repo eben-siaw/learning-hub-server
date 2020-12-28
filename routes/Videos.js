@@ -36,6 +36,7 @@ router.get("/getVideos/:meetingId", (req, res) => {
     })
 });
 
+// get a single video
 router.post("/getVideo", (req, res) => {
 
     Video.findOne({ "_id" : req.body.videoId })
